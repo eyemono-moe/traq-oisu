@@ -1,18 +1,18 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a7d1a66e-7ec8-4922-826a-3a4d8dadcb54",
+  "id": "c521dfab-db2b-4961-80a5-54b381470f86",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "list_admins": {
       "name": "list_admins",
       "columns": {
-        "id": {
-          "name": "id",
+        "list_id": {
+          "name": "list_id",
           "type": "bigint",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
@@ -25,10 +25,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "list_admins_id_user_id_pk": {
-          "name": "list_admins_id_user_id_pk",
+        "list_admins_list_id_user_id_pk": {
+          "name": "list_admins_list_id_user_id_pk",
           "columns": [
-            "id",
+            "list_id",
             "user_id"
           ]
         }
@@ -110,8 +110,8 @@
       },
       "uniqueConstraints": {}
     },
-    "reception": {
-      "name": "reception",
+    "receptions": {
+      "name": "receptions",
       "columns": {
         "id": {
           "name": "id",
@@ -174,9 +174,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "reception_list_id_lists_id_fk": {
-          "name": "reception_list_id_lists_id_fk",
-          "tableFrom": "reception",
+        "receptions_list_id_lists_id_fk": {
+          "name": "receptions_list_id_lists_id_fk",
+          "tableFrom": "receptions",
           "tableTo": "lists",
           "columnsFrom": [
             "list_id"
@@ -189,8 +189,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "reception_id": {
-          "name": "reception_id",
+        "receptions_id": {
+          "name": "receptions_id",
           "columns": [
             "id"
           ]

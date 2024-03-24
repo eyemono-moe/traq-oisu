@@ -1,7 +1,7 @@
 CREATE TABLE `list_admins` (
-	`id` bigint AUTO_INCREMENT NOT NULL,
+	`list_id` bigint NOT NULL,
 	`user_id` char NOT NULL,
-	CONSTRAINT `list_admins_id_user_id_pk` PRIMARY KEY(`id`,`user_id`)
+	CONSTRAINT `list_admins_list_id_user_id_pk` PRIMARY KEY(`list_id`,`user_id`)
 );
 --> statement-breakpoint
 CREATE TABLE `lists` (
@@ -16,7 +16,7 @@ CREATE TABLE `lists` (
 	CONSTRAINT `lists_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `reception` (
+CREATE TABLE `receptions` (
 	`id` bigint AUTO_INCREMENT NOT NULL,
 	`list_id` bigint,
 	`user_id` char,
@@ -25,7 +25,7 @@ CREATE TABLE `reception` (
 	`attend_method` int NOT NULL,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-	CONSTRAINT `reception_id` PRIMARY KEY(`id`)
+	CONSTRAINT `receptions_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-ALTER TABLE `reception` ADD CONSTRAINT `reception_list_id_lists_id_fk` FOREIGN KEY (`list_id`) REFERENCES `lists`(`id`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `receptions` ADD CONSTRAINT `receptions_list_id_lists_id_fk` FOREIGN KEY (`list_id`) REFERENCES `lists`(`id`) ON DELETE no action ON UPDATE no action;

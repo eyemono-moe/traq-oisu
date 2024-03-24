@@ -21,17 +21,17 @@ export const lists = mysqlTable("lists", {
 export const listAdmins = mysqlTable(
   "list_admins",
   {
-    id: bigint("id", { mode: "number" }).autoincrement(),
+    listId: bigint("list_id", { mode: "number" }).notNull(),
     userId: char("user_id").notNull(),
   },
   (table) => ({
     pk: primaryKey({
-      columns: [table.id, table.userId],
+      columns: [table.listId, table.userId],
     }),
   }),
 );
 
-export const reception = mysqlTable("reception", {
+export const receptions = mysqlTable("receptions", {
   id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
   listId: bigint("list_id", { mode: "number" }).references(() => lists.id),
   userId: char("user_id"),
