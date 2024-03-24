@@ -1,15 +1,26 @@
 {
   "name": "traq-oisu",
   "version": "1.0.50",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "gen:drizzle": "drizzle-kit generate:mysql",
+    "migrate": "tsx src/db/migrate.ts",
+    "studio": "drizzle-kit studio",
+    "check": "biome check .",
+    "check:apply": "biome check --apply ."
   },
   "dependencies": {
-    "elysia": "latest"
+    "drizzle-orm": "^0.30.4",
+    "elysia": "latest",
+    "mysql2": "^3.9.2"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@biomejs/biome": "1.6.2",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.20.14",
+    "tsx": "^4.7.1"
   },
   "module": "src/index.js"
 }

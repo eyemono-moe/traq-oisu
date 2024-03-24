@@ -1,0 +1,1 @@
+CREATE USER oisu WITH PASSWORD 'oisu';

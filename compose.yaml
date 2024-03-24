@@ -1,0 +1,24 @@
+services:
+  app:
+    image: "oven/bun"
+    entrypoint: []
+    command: "/bin/sh -c 'bun install && bun run --watch src/index.ts'"
+    ports: 
+      - "3000:3000"
+    volumes: 
+    - "./:/home/bun/app"
+  db:
+    image: "mariadb"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "oisu"
+      MARIADB_USER: oisu
+      MARIADB_PASSWORD: oisu
+      TZ: "Asia/Tokyo"
+    volumes:
+      - "./mariadb/data:/var/lib/mysql"
+      - "./mariadb/init:/docker-entrypoint-initdb.d"
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
