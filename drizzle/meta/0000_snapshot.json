@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "c521dfab-db2b-4961-80a5-54b381470f86",
+  "id": "83b16983-d8cb-4f02-bca6-6dda5894f07d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "list_admins": {
@@ -16,7 +16,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "char",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -47,14 +47,14 @@
         },
         "title": {
           "name": "title",
-          "type": "char",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "description": {
           "name": "description",
-          "type": "char",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -95,7 +95,8 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "onUpdate": true
+          "onUpdate": true,
+          "default": "(now())"
         }
       },
       "indexes": {},
@@ -129,14 +130,14 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "char",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "guest_name": {
           "name": "guest_name",
-          "type": "char",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -169,7 +170,8 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "onUpdate": true
+          "onUpdate": true,
+          "default": "(now())"
         }
       },
       "indexes": {},

@@ -5,7 +5,7 @@ export default {
   out: "./drizzle",
   driver: "mysql2",
   dbCredentials: {
-    host: process.env.NS_MARIADB_HOSTNAME ?? "localhost",
+    host: "localhost",
     user: process.env.NS_MARIADB_USER,
     password: process.env.NS_MARIADB_PASSWORD,
     database: process.env.NS_MARIADB_DATABASE ?? "oisu",

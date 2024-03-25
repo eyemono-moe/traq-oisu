@@ -12,7 +12,9 @@
     "check:apply": "biome check --apply ."
   },
   "dependencies": {
+    "@elysiajs/swagger": "^1.0.3",
     "drizzle-orm": "^0.30.4",
+    "drizzle-typebox": "^0.1.1",
     "elysia": "latest",
     "mysql2": "^3.9.2"
   },
