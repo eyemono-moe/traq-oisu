@@ -5,3 +5,4 @@ console.log("Migrating database...");
 await migrate(db, { migrationsFolder: "./drizzle" });
 await connection.end();
 console.log("Migration completed.");
+process.exit(0);

@@ -1,66 +1,69 @@
 services:
-  # app:
-  #   image: "oven/bun"
-  #   container_name: oisu-app
-  #   hostname: localhost
-  #   entrypoint: []
-  #   command: "/bin/sh -c 'bun install && bun run --watch src/index.ts'"
-  #   ports: 
-  #     - "3000:3000"
-  #   volumes: 
-  #   - "./:/home/bun/app"
-  #   depends_on:
-  #     # db:
-  #     #   condition: service_healthy
-  #     migrate:
-  #       condition: service_completed_successfully
-  #   networks:
-  #     - default
+  app:
+    image: oven/bun
+    container_name: oisu-app
+    entrypoint: []
+    command: "/bin/sh -c 'bun install && bun run --watch src/index.ts'"
+    hostname: localhost
+    ports: 
+      - "3000:3000"
+    volumes: 
+    - "./:/home/bun/app"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
   db:
     image: "mariadb:lts"
     container_name: oisu-db
     restart: always
-    hostname: localhost
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "healthcheck.sh",
-          "--su-mysql",
-          "--connect",
-          "--innodb_initialized"
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
     environment:
       MARIADB_ROOT_PASSWORD: '${NS_MARIADB_ROOT_PASSWORD}'
       MARIADB_DATABASE: '${NS_MARIADB_DATABASE}'
       MARIADB_USER: '${NS_MARIADB_USER}'
       MARIADB_PASSWORD: '${NS_MARIADB_PASSWORD}'
-      MARIADB_HOST: '${NS_MARIADB_PASSWORD}'
       TZ: "Asia/Tokyo"
-    volumes:
-      - "./mariadb/data:/var/lib/mysql"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     ports:
       - "3306:3306"
+    expose:
+      - 3306
+    volumes:
+      - oisu-db:/var/lib/mysql
+  migrate:
+    image: oven/bun
+    container_name: oisu-migrate
+    entrypoint: []
+    command: "/bin/sh -c 'bun install && bun run ./src/db/migrate.ts'"
+    volumes: 
+      - "./:/home/bun/app"
+    depends_on: 
+      db:
+        condition: service_healthy
     networks:
       - default
-  # migrate:
-  #   image: "oven/bun"
-  #   container_name: oisu-migrate
-  #   hostname: localhost
-  #   entrypoint: []
-  #   command: "/bin/sh -c 'bun install && bun run ./src/db/migrate.ts'"
-  #   volumes: 
-  #     - "./:/home/bun/app"
-  #   depends_on: 
-  #     - db
-  #     # db:
-  #     #   condition: service_healthy
-  #   networks:
-  #     - default
-networks:
-  default:
-    driver: bridge
+  studio:
+    image: oven/bun
+    container_name: oisu-studio
+    hostname: localhost
+    entrypoint: []
+    command: "/bin/sh -c 'bun install && bun studio --port 4983'"
+    volumes: 
+      - "./:/home/bun/app"
+    depends_on: 
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "4983:4983"
+    networks:
+      - default
+volumes:
+  oisu-db:
+    name: mariadb-data
+    driver: local

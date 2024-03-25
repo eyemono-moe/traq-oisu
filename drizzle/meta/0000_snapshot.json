@@ -27,10 +27,7 @@
       "compositePrimaryKeys": {
         "list_admins_list_id_user_id_pk": {
           "name": "list_admins_list_id_user_id_pk",
-          "columns": [
-            "list_id",
-            "user_id"
-          ]
+          "columns": ["list_id", "user_id"]
         }
       },
       "uniqueConstraints": {}
@@ -104,9 +101,7 @@
       "compositePrimaryKeys": {
         "lists_id": {
           "name": "lists_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -180,12 +175,8 @@
           "name": "receptions_list_id_lists_id_fk",
           "tableFrom": "receptions",
           "tableTo": "lists",
-          "columnsFrom": [
-            "list_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["list_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -193,9 +184,7 @@
       "compositePrimaryKeys": {
         "receptions_id": {
           "name": "receptions_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}

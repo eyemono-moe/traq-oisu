@@ -1,55 +1,65 @@
 import { eq } from "drizzle-orm";
-import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
+import { createInsertSchema } from "drizzle-typebox";
 import Elysia, { t } from "elysia";
 import { db } from "../db";
 import { lists } from "../db/schema";
 
 const insertSchema = createInsertSchema(lists);
-const selectSchema = createSelectSchema(lists);
 
-const readParams = t.Object({
-  id: t.String(),
+const listCreateBody = t.Omit(insertSchema, ["id", "createdAt", "updatedAt"]);
+const listReadParams = t.Object({
+  listId: t.String(),
 });
-const readAllBody = t.MaybeEmpty(
-  t.Object({
-    limit: t.Optional(t.Integer()),
-    offset: t.Optional(t.Integer()),
-  }),
-);
-const createBody = t.Omit(insertSchema, ["id", "createdAt", "updatedAt"]);
-const updateBody = t.Intersect([
-  t.Partial(insertSchema),
-  t.Partial(t.Object({ id: selectSchema.properties.id })),
+const listUpdateParams = t.Object({
+  listId: t.String(),
+});
+const listUpdateBody = t.Omit(t.Partial(insertSchema), [
+  "id",
+  "createdAt",
+  "updatedAt",
 ]);
-const deleteBody = t.Object({
-  id: selectSchema.properties.id,
+const listDeleteParams = t.Object({
+  listId: t.String(),
 });
 
 export const listModel = new Elysia().model({
-  readParams,
-  readAllBody,
-  createBody,
-  updateBody,
-  deleteBody,
+  listCreateBody,
+  listReadParams,
+  listUpdateParams,
+  listUpdateBody,
+  listDeleteParams,
 });
 
 export const listRepository = {
-  read: async (params: typeof readParams.static) => {
-    const id = Number(params.id);
-    const result = await db.select().from(lists).where(eq(lists.id, id));
-    return result.at(0);
+  readAll: async () => {
+    return await db.select().from(lists);
   },
-  readAll: async (body: typeof readAllBody.static) => {
-    return await db
+  create: (body: typeof listCreateBody.static) => {
+    return db.insert(lists).values(body);
+  },
+  read: async (params: typeof listReadParams.static) => {
+    const id = Number(params.listId);
+    const result = await db
       .select()
       .from(lists)
-      .limit(body?.limit ?? 100)
-      .offset(body?.offset ?? 0);
+      .where(eq(lists.id, id))
+      .limit(1);
+    return result.at(0);
   },
-  create: async (body: typeof createBody.static) => {
-    const result = await db.insert(lists).values(body);
-    console.log(result);
+  update: async (
+    params: typeof listUpdateParams.static,
+    body: typeof listUpdateBody.static,
+  ) => {
+    const id = Number(params.listId);
+    const result = await db.update(lists).set(body).where(eq(lists.id, id));
+    const insertedId = result[0]?.insertId;
+    return (await db.select().from(lists).where(eq(lists.id, insertedId))).at(
+      0,
+    );
   },
-  update: (body: typeof updateBody.static) => {},
-  delete: (body: typeof deleteBody.static) => {},
+  delete: (params: typeof listDeleteParams.static) => {
+    // TODO: 物理削除ではなく論理削除にする
+    const id = Number(params.listId);
+    return db.delete(lists).where(eq(lists.id, id));
+  },
 };
