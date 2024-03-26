@@ -1,6 +1,16 @@
 import swagger from "@elysiajs/swagger";
-import { createSelectSchema } from "drizzle-typebox";
-import { lists, receptions } from "./db/schema";
+import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
+import { t } from "elysia";
+import { listAdmins, lists, receptions } from "./db/schema";
+
+const listSchema = createSelectSchema(lists);
+const adminSchema = createInsertSchema(listAdmins);
+const listWithAdminSchema = t.Intersect([
+  t.Omit(listSchema, ["id", "createdAt", "updatedAt"]),
+  t.Object({
+    admins: t.Array(t.Omit(adminSchema, ["listId"]), { minItems: 1 }),
+  }),
+]);
 
 export const swaggerOptions = swagger({
   documentation: {
@@ -16,7 +26,7 @@ export const swaggerOptions = swagger({
     ],
     components: {
       schemas: {
-        list: createSelectSchema(lists),
+        list: listWithAdminSchema,
         reception: createSelectSchema(receptions),
       },
     },

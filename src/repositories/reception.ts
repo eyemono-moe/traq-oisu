@@ -4,29 +4,20 @@ import Elysia, { t } from "elysia";
 import { db } from "../db";
 import { receptions } from "../db/schema";
 
-const insertSchema = createInsertSchema(receptions);
+const receptionSchema = createInsertSchema(receptions);
+const insertSchema = t.Omit(receptionSchema, ["id", "createdAt", "updatedAt"]);
 
 const receptionReadFromListParams = t.Object({
   listId: t.String(),
 });
-const receptionCreateBody = t.Omit(insertSchema, [
-  "id",
-  "listId",
-  "createdAt",
-  "updatedAt",
-]);
+const receptionCreateBody = t.Omit(insertSchema, ["listId"]);
 const receptionReadParams = t.Object({
   id: t.String(),
 });
 const receptionUpdateParams = t.Object({
   id: t.String(),
 });
-const receptionUpdateBody = t.Omit(t.Partial(insertSchema), [
-  "id",
-  "listId",
-  "createdAt",
-  "updatedAt",
-]);
+const receptionUpdateBody = t.Omit(t.Partial(insertSchema), ["listId"]);
 const receptionDeleteParams = t.Object({
   id: t.String(),
 });

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   bigint,
   int,
@@ -19,6 +20,11 @@ export const lists = mysqlTable("lists", {
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
+export const listsRelations = relations(lists, ({ many }) => ({
+  receptions: many(receptions),
+  admins: many(listAdmins),
+}));
+
 export const listAdmins = mysqlTable(
   "list_admins",
   {
@@ -32,6 +38,13 @@ export const listAdmins = mysqlTable(
   }),
 );
 
+export const listAdminsRelations = relations(listAdmins, ({ one }) => ({
+  list: one(lists, {
+    fields: [listAdmins.listId],
+    references: [lists.id],
+  }),
+}));
+
 export const receptions = mysqlTable("receptions", {
   id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
   listId: bigint("list_id", { mode: "number" }).references(() => lists.id),
@@ -42,3 +55,10 @@ export const receptions = mysqlTable("receptions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
+
+export const receptionsRelations = relations(receptions, ({ one }) => ({
+  list: one(lists, {
+    fields: [receptions.listId],
+    references: [lists.id],
+  }),
+}));

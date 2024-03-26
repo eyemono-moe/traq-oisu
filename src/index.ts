@@ -3,8 +3,9 @@ import { routes } from "./routes";
 import { swaggerOptions } from "./swagger";
 
 const app = new Elysia()
-  .onError(({ body, params, query }) => {
-    console.error({ body, params, query });
+  .onError(({ body, params, query, code, path, error }) => {
+    console.error(`error on ${path}:`, { body, params, query });
+    console.log(`code: ${code}`, error.message);
   })
   .use(swaggerOptions)
   .use(routes)
